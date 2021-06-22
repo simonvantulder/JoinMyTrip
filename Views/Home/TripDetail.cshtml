@@ -1,0 +1,38 @@
+@model Trip
+@{
+    ViewData["Title"] = "Wedding Details";
+    int? uid = @Context.Session.GetInt32("UserId");
+}
+<div>
+
+<h1>@Model.Destination </h1>
+<a asp-controller="Home" asp-action="Dashboard" >Dashboard</a>
+<a asp-controller="Home" asp-action="Logout">Logout</a>
+
+</div>
+<div>
+
+    <h3>
+        Start Date: @Model.StartDate.ToString("MMMM d, yyyy")
+    </h3>
+    <h3>
+        End Date: @Model.EndDate.ToString("MMMM d, yyyy")
+    </h3>
+    <h3>
+        Plan: @Model.Plan
+    </h3>
+    <h3>
+        Guide: @Model.Guide.FullName()
+    </h3>
+    <div>
+        <h3>People on this Trip: @Model.Tourists.Count()</h3>
+
+            <ul>
+                @foreach (UTRel item in Model.Tourists)
+                {
+                    <li>@item.UserTourist.FullName() </li>
+                }
+            </ul>
+    </div>
+
+</div>

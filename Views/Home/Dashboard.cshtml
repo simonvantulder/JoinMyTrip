@@ -1,0 +1,110 @@
+@model User
+@{
+    ViewData["Title"] = "Trip Details";
+    int? uid = @Context.Session.GetInt32("UserId");
+
+}
+
+
+<div>
+    <h1>Success, you logged in! Hello @Model.FullName() !</h1>
+    <a href="/logout">logout</a>
+    <a href="/trip/new"><button class="btn btn-sm btn-outline-success">Create a New Trip</button>
+    </a>
+</div>
+
+<h3>Your trips:</h3>
+
+<table style="width:100%">
+    <tr>
+        <th>Destination</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Plan</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (Trip item in ViewBag.TripsJoined)
+    {
+        bool existingResponse = item.Tourists.Any(rsvp => rsvp.UserTouristId == (int)uid);
+        <tr>
+            <td>
+                <a asp-controller="Home" asp-action="TripDetail" asp-route-tripId="@item.TripId">
+                    @item.Destination
+                </a>
+            </td>
+            <td>@item.StartDate.ToString("MMMM d, yyyy")</td>
+            <td>@item.EndDate.ToString("MMMM d, yyyy")</td>
+            <td>@item.Plan</td>
+            <td>
+                @if (item.GuideId == uid)
+                {
+                    @* Delete could be a GET request, but POST is better practice *@
+                    <form asp-controller="Home" asp-action="Delete" asp-route-tripId="@item.TripId" method="POST" class="d-inline-block">
+                        <button class="btn btn-sm btn-outline-danger">Delete/Cancel My Trip :'(</button>
+                    </form>
+                    <a asp-controller="Home" asp-action="EditTrip" asp-route-tripId="@item.TripId" method="GET" class="d-inline-block">
+                        <button class="btn btn-sm btn-outline-warning">Edit my Trip</button>
+                    </a>
+                }
+                    <form asp-controller="Home" asp-action="LinkRSVP" asp-route-tripId="@item.TripId">
+                @if(existingResponse && item.GuideId != uid )
+                {
+                    <button class="btn btn-outline-danger">
+                        Sorry, Can't Go Anymore
+                    </button>
+                }
+                else if (item.GuideId != uid)
+                {
+                    <button class="btn btn-outline-info">
+                        Join Trip!
+                    </button>
+                }
+                    </form>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<h3>Other trips:</h3>
+
+<table style="width:100%">
+    <tr>
+        <th>Destination</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Plan</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (Trip item in ViewBag.TripsNotJoined)
+    {
+        bool existingResponse = item.Tourists.Any(rsvp => rsvp.UserTouristId == (int)uid);
+        <tr>
+                @if(!existingResponse)
+                {
+            <td>
+                <a asp-controller="Home" asp-action="TripDetail" asp-route-tripId="@item.TripId">
+                    @item.Destination
+                </a>
+            </td>
+            <td>@item.StartDate.ToString("MMMM d, yyyy")</td>
+            <td>@item.EndDate.ToString("MMMM d, yyyy")</td>
+            <td>@item.Plan</td>
+            <td>
+                    <form asp-controller="Home" asp-action="LinkRSVP" asp-route-tripId="@item.TripId">
+                    <button class="btn btn-outline-info">
+                        JoinTrip
+                    </button>
+                    </form>
+            </td>
+                }
+                @* else
+                {
+                    <button class="btn btn-outline-info">
+                        Join Trip!
+                    </button>
+                } *@
+        </tr>
+    }
+
+</table>
