@@ -20,7 +20,6 @@ namespace LoginReg.Models
         public int UserParticipantId { get; set; }
         public User UserParticipant { get; set; } 
         public int LedActivityId { get; set; }
-        
-        // public Game LedActivity { get; set; } 
+        public Game LedActivity { get; set; } 
     }
 }
