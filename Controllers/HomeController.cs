@@ -216,9 +216,9 @@ namespace LoginReg.Controllers
             /* 
             WHENEVER REDIRECTING to a method that has params, you must pass in
             a 'new' dictionary: new { paramName = valueForParam }
-            //                      left matches argument in WedDetail = right matches value from this function/method*/
-            // return RedirectToAction("TripDetail", new { tripId = newTrip.TripId });
-            return RedirectToAction("Dashboard");
+            left matches argument in TripDetail => right matches value from this function/method ie:
+            */
+            return RedirectToAction("TripDetail", new { tripId = newTrip.TripId });
         }
 
         [HttpGet("/trip/{tripId}")]
